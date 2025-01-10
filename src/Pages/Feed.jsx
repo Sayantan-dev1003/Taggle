@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import Header from '../Components/Header';
 
 const Feed = () => {
     const logout = async () => {
@@ -14,7 +15,7 @@ const Feed = () => {
 
     return (
         <>
-            <p>This is Feed page.</p>
+            <Header />
             <button onClick={logout} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Logout
             </button>
