@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faUser, faComments, faTrophy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faUser, faComments, faTrophy, faQuestionCircle, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Logo2 from "../images/TAGGLE LOGO2.png";
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <header className="flex items-center justify-between bg-white border border-b-gray-300 py-2 px-4 sticky">
-            <div className="icon">
-                <FontAwesomeIcon icon={faBars} className="text-xl text-gray-600 laptop:hidden tablet:block" />
-            </div>
+            <div className='flex gap-4 items-center'>
+                <div className="icon">
+                    <FontAwesomeIcon icon={isMenuOpen ? faXmark : faBars} className="text-xl text-gray-600 laptop:hidden tablet:block" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                </div>
 
-            {/* Logo */}
-            <div className="logo flex items-center">
-                <img src={Logo2} alt="Taggle Logo" className="w-[5rem] h-auto cursor-pointer tablet:ml-2" onClick={() => navigate("/feed")} />
+                {/* Logo */}
+                <div className="logo flex items-center">
+                    <img src={Logo2} alt="Taggle Logo" className="w-[5rem] h-auto cursor-pointer" onClick={() => navigate("/feed")} />
+                </div>
             </div>
 
             {/* Search Bar */}
