@@ -7,6 +7,8 @@ import SignUp from "./Pages/SignUp";
 import SignIn from "./Pages/SignIn";
 import Feed from "./Pages/Feed";
 import UserAgreement from "./Pages/UserAgreement";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import CookiesPolicy from "./Pages/CookiesPolicy";
 
 const App = () => {
   return (
@@ -17,6 +19,8 @@ const App = () => {
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/user-agreement" element={<UserAgreement />}></Route>
+        <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
+        <Route path="/cookies-policy" element={<CookiesPolicy />}></Route>
       </Routes>
     </Router>
   )

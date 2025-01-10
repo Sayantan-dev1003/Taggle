@@ -1,8 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserAgreement = () => {
+    const navigate = useNavigate();
+
+    const handleOkClick = () => {
+        navigate('/');
+    };
+
     return (
-        <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center openSans">
+        <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center openSans py-4">
             <div className="bg-white shadow-lg rounded-lg mx-4 p-6 w-full max-w-lg text-justify openSans">
                 <h1 className="text-2xl montserrat font-bold text-center text-red-600 mb-6">User Agreement for Taggle</h1>
 
@@ -100,6 +107,10 @@ const UserAgreement = () => {
                 </section>
 
                 <p className="mt-6">By using Taggle, you agree to this User Agreement and confirm that you understand its terms and conditions.</p>
+
+                <button className="bg-red-600 shadow-lg rounded-lg py-2 px-6  text-center openSans text-xl font-semibold mt-4 text-white" onClick={handleOkClick}>
+                    OK
+                </button>
             </div>
         </div>
     );

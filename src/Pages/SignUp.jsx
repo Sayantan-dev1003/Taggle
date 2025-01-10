@@ -78,7 +78,7 @@ const SignUp = () => {
 
           <p className="text-xs text-center mt-4 poppins w-[90%] mx-auto text-gray-400">By clicking SignUp or Continue, you 
           agree to the Taggle <span className="text-red-600 cursor-pointer font-medium hover:border-b-red-600 
-          hover:border-b" onClick={() => navigate('/user-agreement')}>User Agreement</span>, <span className="text-red-600 cursor-pointer font-medium hover:border-b-red-600 hover:border-b">Privacy Policy</span> and <span className="text-red-600 cursor-pointer font-medium hover:border-b-red-600 hover:border-b">Cookie Policy</span></p>
+          hover:border-b" onClick={() => navigate('/user-agreement')}>User Agreement</span>, <span className="text-red-600 cursor-pointer font-medium hover:border-b-red-600 hover:border-b" onClick={() => navigate('/privacy-policy')}>Privacy Policy</span> and <span className="text-red-600 cursor-pointer font-medium hover:border-b-red-600 hover:border-b" onClick={() => navigate("/cookies-policy")}>Cookies`` Policy</span></p>
 
           <button
             type="submit"
