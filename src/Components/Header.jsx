@@ -9,7 +9,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     return (
-        <header className="flex items-center justify-between bg-white shadow-lg py-2 px-4">
+        <header className="flex items-center justify-between bg-white border border-b-gray-300 py-2 px-4 sticky">
             {/* Search Icon */}
             <div className="icon">
                 <FontAwesomeIcon icon={faBars} className="text-xl text-gray-600 laptop:hidden" />
