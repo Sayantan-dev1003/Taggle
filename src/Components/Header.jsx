@@ -1,8 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faUser, faComments, faTrophy, faQuestionCircle, faBars } from '@fortawesome/free-solid-svg-icons';
-
-import Logo2 from "../images/TAGGLE LOGO2.png"
+import { faBars, faSearch, faUser, faComments, faTrophy, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Logo2 from "../images/TAGGLE LOGO2.png";
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
@@ -10,9 +9,8 @@ const Header = () => {
 
     return (
         <header className="flex items-center justify-between bg-white border border-b-gray-300 py-2 px-4 sticky">
-            {/* Search Icon */}
             <div className="icon">
-                <FontAwesomeIcon icon={faBars} className="text-xl text-gray-600 laptop:hidden" />
+                <FontAwesomeIcon icon={faBars} className="text-xl text-gray-600 laptop:hidden tablet:block" />
             </div>
 
             {/* Logo */}
