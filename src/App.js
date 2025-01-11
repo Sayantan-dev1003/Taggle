@@ -9,6 +9,7 @@ import Feed from "./Pages/Feed";
 import UserAgreement from "./Pages/UserAgreement";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import CookiesPolicy from "./Pages/CookiesPolicy";
+import QuestionForm from "./Pages/QuestionForm";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/user-agreement" element={<UserAgreement />}></Route>
         <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
         <Route path="/cookies-policy" element={<CookiesPolicy />}></Route>
+        <Route path="/ask-question" element={<QuestionForm />}></Route>
       </Routes>
     </Router>
   )
