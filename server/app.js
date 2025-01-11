@@ -75,6 +75,17 @@ app.get("/feed", authenticateToken, (req, res) => {
     res.status(200).json({ message: "Feed fetched successfully" });
 })
 
+// Route to get the full name of the authenticated user
+app.get("/api/user/fullname", authenticateToken, async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user.userid);
+        if (!user) return res.sendStatus(404);
+        res.status(200).json({ fullName: user.fullname });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 // User logout
 app.get("/logout", (req, res) => {
     res.cookie("token", "", { httpOnly: true, expires: new Date(0) });

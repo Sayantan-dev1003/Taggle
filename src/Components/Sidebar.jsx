@@ -19,7 +19,7 @@ const Sidebar = ({ isVisible }) => {
     };
 
     return (
-        <div className={`flex flex-col text-base bg-white w-48 pt-14 pb-6 sticky border border-t-0 border-b-0 border-l-0 border-r-gray-300 h-[calc(100vh-3.6rem)] justify-between transform transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`flex flex-col text-base bg-white w-48 pt-14 pb-6 fixed top-[3.6rem] z-40 border border-t-0 border-b-0 border-l-0 border-r-gray-300 h-[calc(100vh-3.6rem)] justify-between transform transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}>
             <div>
                 <div className="sidebar-option flex items-center space-x-4 py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg hover:font-medium" onClick={() => navigate('/home')}>
                     <FontAwesomeIcon icon={faHome} className="text-gray-600" />
