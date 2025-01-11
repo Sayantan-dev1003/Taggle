@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faUser, faComments, faTrophy, faQuestionCircle, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faUser , faComments, faTrophy, faQuestionCircle, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Logo2 from "../images/TAGGLE LOGO2.png";
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ onToggleSidebar }) => {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -12,7 +12,14 @@ const Header = () => {
         <header className="flex items-center justify-between bg-white border border-b-gray-300 py-2 px-4 sticky">
             <div className='flex gap-4 items-center'>
                 <div className="icon">
-                    <FontAwesomeIcon icon={isMenuOpen ? faXmark : faBars} className="text-xl text-gray-600 laptop:hidden tablet:block" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                    <FontAwesomeIcon 
+                        icon={isMenuOpen ? faXmark : faBars} 
+                        className="text-xl text-gray-600 cursor-pointer" 
+                        onClick={() => {
+                            setIsMenuOpen(!isMenuOpen);
+                            onToggleSidebar(); // Call the toggle function passed as a prop
+                        }} 
+                    />
                 </div>
 
                 {/* Logo */}
@@ -39,7 +46,7 @@ const Header = () => {
 
                 {/* Profile Icon */}
                 <div className="icon">
-                    <FontAwesomeIcon icon={faUser} className="text-xl text-gray-600" />
+                    <FontAwesomeIcon icon={faUser } className="text-xl text-gray-600" />
                 </div>
 
                 {/* Message Icon */}
