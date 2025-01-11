@@ -38,7 +38,7 @@ const SignUp = () => {
   return (
     <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center openSans">
       <div className="bg-white shadow-lg rounded-lg mx-4 p-6 w-full max-w-lg">
-        <h1 className="text-5xl montserrat font-bold text-center text-red-600 flex items-center justify-center">
+        <h1 className="text-5xl montserrat font-bold text-center text-red-600 mb-6 flex items-center justify-center">
           Join <img src={Logo2} alt="" className="w-[8rem] h-auto" />
         </h1>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 openSans">
