@@ -17,18 +17,16 @@ const Header = ({ onToggleSidebar }) => {
                         className="text-xl text-gray-600 cursor-pointer" 
                         onClick={() => {
                             setIsMenuOpen(!isMenuOpen);
-                            onToggleSidebar(); // Call the toggle function passed as a prop
+                            onToggleSidebar();
                         }} 
                     />
                 </div>
 
-                {/* Logo */}
                 <div className="logo flex items-center">
                     <img src={Logo2} alt="Taggle Logo" className="w-[5rem] h-auto cursor-pointer" onClick={() => navigate("/feed")} />
                 </div>
             </div>
 
-            {/* Search Bar */}
             <div className="search-bar block flex-grow mx-4 mobile:hidden tablet:block">
                 <input
                     type="text"
@@ -37,29 +35,23 @@ const Header = ({ onToggleSidebar }) => {
                 />
             </div>
 
-            {/* Navigation Icons */}
             <div className="nav-icons flex items-center space-x-6">
-                {/* Search Icon */}
                 <div className="icon">
                     <FontAwesomeIcon icon={faSearch} className="text-xl text-gray-600 laptop:hidden tablet:hidden" />
                 </div>
 
-                {/* Profile Icon */}
                 <div className="icon">
                     <FontAwesomeIcon icon={faUser } className="text-xl text-gray-600" />
                 </div>
 
-                {/* Message Icon */}
                 <div className="icon">
                     <FontAwesomeIcon icon={faComments} className="text-xl text-gray-600" />
                 </div>
 
-                {/* Trophy Icon */}
                 <div className="icon">
                     <FontAwesomeIcon icon={faTrophy} className="text-xl text-gray-600" />
                 </div>
 
-                {/* Question Icon */}
                 <div className="icon">
                     <FontAwesomeIcon icon={faQuestionCircle} className="text-xl text-gray-600" />
                 </div>

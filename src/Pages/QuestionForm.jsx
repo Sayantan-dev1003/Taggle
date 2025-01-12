@@ -3,13 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../Components/Header";
+import Sidebar from "../Components/Sidebar";
 
 const QuestionForm = () => {
   const [activeInfo, setActiveInfo] = useState("title");
+  const  [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   return (
     <>
       <Header />
+        <Sidebar isVisible={isSidebarVisible} />
       <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
         <div className="flex flex-col justify-center items-center gap-2 w-full">
           <p className="montserrat text-xl mobile:w-3/4 mobile:text-center">
