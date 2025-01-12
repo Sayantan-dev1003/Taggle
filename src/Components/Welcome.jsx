@@ -26,7 +26,7 @@ const Welcome = () => {
         </div>
         <div className="w-[30vw] text-end">
           <button
-            className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-200"
+            className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100"
             onClick={() => naviagte("/ask-question")}
           >
             Ask Question

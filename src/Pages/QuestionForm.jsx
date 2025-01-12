@@ -154,7 +154,7 @@ const QuestionForm = () => {
           </div>
 
           <div className="">
-            <button className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-200">
+            <button className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100">
               Ask Question
             </button>
           </div>
