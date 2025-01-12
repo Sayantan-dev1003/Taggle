@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
+  const naviagte = useNavigate();
   const [fullName, setFullName] = useState("");
 
   useEffect(() => {
-    // Replace with your actual API endpoint
     fetch("/api/user/fullname")
-      .then(response => response.json())
-      .then(data => setFullName(data.fullName))
-      .catch(error => console.error("Error fetching full name:", error));
+      .then((response) => response.json())
+      .then((data) => setFullName(data.fullName))
+      .catch((error) => console.error("Error fetching full name:", error));
   }, []);
 
   return (
@@ -24,9 +25,12 @@ const Welcome = () => {
           </span>
         </div>
         <div className="w-[30vw] text-end">
-            <button className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2">
+          <button
+            className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2"
+            onClick={() => naviagte("/ask-question")}
+          >
             Ask Question
-            </button>
+          </button>
         </div>
       </div>
     </>
