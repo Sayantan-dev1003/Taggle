@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../Components/Header";
 
 const QuestionForm = () => {
+  const [activeInfo, setActiveInfo] = useState("title");
+
   return (
     <>
       <Header />
       <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
-        <div className="flex flex-col justify-center items-center gap-2">
+        <div className="flex flex-col justify-center items-center gap-2 w-full">
           <p className="montserrat text-xl mobile:w-3/4 mobile:text-center">
             Asking a question in Staging Ground
           </p>
@@ -19,7 +21,7 @@ const QuestionForm = () => {
         </div>
         <form className="w-full poppins flex flex-col gap-10 my-16">
           <div className="w-full flex flex-col gap-2">
-            <div className="w-full border border-gray-300 rounded-md p-5 flex gap-4">
+            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "title" ? "block" : "hidden"}`}>
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
@@ -48,12 +50,13 @@ const QuestionForm = () => {
                 id="title"
                 className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
                 placeholder="e.g. Is there an R function for finding the index of an array?"
+                onFocus={() => setActiveInfo("title")}
               />
             </div>
           </div>
 
           <div className="w-full flex flex-col gap-2">
-            <div className="w-full border border-gray-300 rounded-md p-5 flex gap-4">
+            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "description" ? "block" : "hidden"}`}>
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
@@ -89,12 +92,13 @@ const QuestionForm = () => {
                 id="description"
                 className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
                 placeholder="e.g. Is there an R function for finding the index of an array?"
+                onFocus={() => setActiveInfo("description")}
               />
             </div>
           </div>
 
           <div className="w-full">
-            <div className="w-full border border-gray-300 rounded-md p-5 flex gap-4">
+            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "tags" ? "block" : "hidden"}`}>
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
@@ -125,6 +129,7 @@ const QuestionForm = () => {
                 id="title"
                 className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
                 placeholder="e.g. Is there an R function for finding the index of an array?"
+                onFocus={() => setActiveInfo("tags")}
               />
             </div>
           </div>
