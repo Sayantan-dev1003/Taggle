@@ -7,12 +7,16 @@ import Sidebar from "../Components/Sidebar";
 
 const QuestionForm = () => {
   const [activeInfo, setActiveInfo] = useState("title");
-  const  [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleToggleSidebar = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <>
-      <Header />
-        <Sidebar isVisible={isSidebarVisible} />
+      <Header onToggleSidebar={handleToggleSidebar} />
+      <Sidebar isMenuOpen={isMenuOpen} />
       <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
         <div className="flex flex-col justify-center items-center gap-2 w-full">
           <p className="montserrat text-xl mobile:w-3/4 mobile:text-center">
@@ -24,7 +28,11 @@ const QuestionForm = () => {
         </div>
         <form className="w-full poppins flex flex-col gap-10 my-16">
           <div className="w-full flex flex-col gap-2">
-            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "title" ? "block" : "hidden"}`}>
+            <div
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
+                activeInfo === "title" ? "block" : "hidden"
+              }`}
+            >
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
@@ -59,7 +67,11 @@ const QuestionForm = () => {
           </div>
 
           <div className="w-full flex flex-col gap-2">
-            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "description" ? "block" : "hidden"}`}>
+            <div
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
+                activeInfo === "description" ? "block" : "hidden"
+              }`}
+            >
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
@@ -101,7 +113,11 @@ const QuestionForm = () => {
           </div>
 
           <div className="w-full">
-            <div className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "tags" ? "block" : "hidden"}`}>
+            <div
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
+                activeInfo === "tags" ? "block" : "hidden"
+              }`}
+            >
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-3xl text-red-600"
