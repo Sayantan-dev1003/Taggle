@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import userModel from "./models/userModel.js";
+import questionModel from "./models/questionModel.js"
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -68,6 +69,31 @@ app.post("/login", async (req, res) => {
         return res.status(200).json({ message: "Login Successful" });
     } else {
         return res.status(401).json("Invalid email or password");
+    }
+});
+
+// Route to create a question
+app.post("/api/questions", authenticateToken, async (req, res) => {
+    const { title, description, tags } = req.body;
+
+    // Validate the input
+    if (!title || !description || !Array.isArray(tags) || tags.length > 5) {
+        return res.status(400).json({ message: "Invalid input" });
+    }
+
+    try {
+        const newQuestion = new questionModel({
+            title,
+            description,
+            tags,
+            author: req.user.userid // Use the authenticated user's ID
+        });
+
+        await newQuestion.save();
+        res.status(201).json({ message: "Question created successfully", question: newQuestion });
+    } catch (error) {
+        console.error("Error creating question:", error); // Log the error for debugging
+        res.status(500).json({ message: "Error creating question", error });
     }
 });
 
