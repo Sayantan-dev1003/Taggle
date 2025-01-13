@@ -1,14 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.e9a5c8bc.css",
-    "main.js": "/static/js/main.b7906e1b.js",
+    "main.css": "/static/css/main.da234ffe.css",
+    "main.js": "/static/js/main.0766c21a.js",
+    "static/media/TAGGLE LOGO1.png": "/static/media/TAGGLE LOGO1.bfee1ba204d60ef9d753.png",
     "static/media/TAGGLE LOGO2.png": "/static/media/TAGGLE LOGO2.52a8f262825f3ebd9e70.png",
     "index.html": "/index.html",
-    "main.e9a5c8bc.css.map": "/static/css/main.e9a5c8bc.css.map",
-    "main.b7906e1b.js.map": "/static/js/main.b7906e1b.js.map"
+    "main.da234ffe.css.map": "/static/css/main.da234ffe.css.map",
+    "main.0766c21a.js.map": "/static/js/main.0766c21a.js.map"
   },
   "entrypoints": [
-    "static/css/main.e9a5c8bc.css",
-    "static/js/main.b7906e1b.js"
+    "static/css/main.da234ffe.css",
+    "static/js/main.0766c21a.js"
   ]
 }

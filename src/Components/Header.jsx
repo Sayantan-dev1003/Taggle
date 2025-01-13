@@ -9,7 +9,7 @@ const Header = ({ onToggleSidebar }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className="flex items-center justify-between bg-white border border-b-gray-300 py-2 px-4 sticky">
+        <header className="flex items-center w-full justify-between bg-white border border-b-gray-300 py-2 px-4 fixed z-50">
             <div className='flex gap-4 items-center'>
                 <div className="icon">
                     <FontAwesomeIcon 
