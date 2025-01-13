@@ -97,6 +97,17 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
     }
 });
 
+// Route to get all questions
+app.get("/api/display-questions", async (req, res) => {
+    try {
+        const questions = await questionModel.find().sort({ createdAt: -1 }); 
+        res.status(200).json({ questions });
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ message: "Error fetching questions" });
+    }
+});
+
 app.get("/feed", authenticateToken, (req, res) => {
     res.status(200).json({ message: "Feed fetched successfully" });
 })
