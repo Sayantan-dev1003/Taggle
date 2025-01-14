@@ -86,13 +86,13 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
             title,
             description,
             tags,
-            author: req.user.userid // Use the authenticated user's ID
+            author: req.user.userid 
         });
 
         await newQuestion.save();
         res.status(201).json({ message: "Question created successfully", question: newQuestion });
     } catch (error) {
-        console.error("Error creating question:", error); // Log the error for debugging
+        console.error("Error creating question:", error); 
         res.status(500).json({ message: "Error creating question", error });
     }
 });
@@ -103,8 +103,6 @@ app.get("/api/display-questions", async (req, res) => {
         const questions = await questionModel.find()
             .populate('author', 'fullname')
             .sort({ createdAt: -1 });
-
-        console.log("Fetched Questions:", questions);
         res.status(200).json({ questions });
     } catch (error) {
         console.error("Error fetching questions:", error);

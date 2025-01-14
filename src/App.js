@@ -10,6 +10,7 @@ import UserAgreement from "./Pages/UserAgreement";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import CookiesPolicy from "./Pages/CookiesPolicy";
 import QuestionForm from "./Pages/QuestionForm";
+import Questions from "./Pages/Questions";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
         <Route path="/cookies-policy" element={<CookiesPolicy />}></Route>
         <Route path="/ask-question" element={<QuestionForm />}></Route>
+        <Route path="/questions" element={<Questions />}></Route>
       </Routes>
     </Router>
   )
