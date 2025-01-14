@@ -123,6 +123,19 @@ app.get("/api/user/fullname", authenticateToken, async (req, res) => {
     }
 });
 
+app.get("/api/user/fullname/:userId", async (req, res) => {
+    try {
+      const user = await User.findById(req.params.userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({ fullname: user.fullname }); // Assuming the User model has a `fullname` field
+    } catch (error) {
+      console.error("Error fetching user fullname:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
 // User logout
 app.get("/logout", (req, res) => {
     res.cookie("token", "", { httpOnly: true, expires: new Date(0) });

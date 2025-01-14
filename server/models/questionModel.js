@@ -26,7 +26,12 @@ const questionSchema = mongoose.Schema({
     timestamp: {
         type: Date,
         default: Date.now
-    }
+    },
+    answers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "answer",
+        default: []
+    }]
 });
 
 export default mongoose.model("question", questionSchema);
