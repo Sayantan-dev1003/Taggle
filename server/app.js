@@ -100,7 +100,11 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
 // Route to get all questions
 app.get("/api/display-questions", async (req, res) => {
     try {
-        const questions = await questionModel.find().sort({ createdAt: -1 }); 
+        const questions = await questionModel.find()
+            .populate('author', 'fullname')
+            .sort({ createdAt: -1 });
+
+        console.log("Fetched Questions:", questions);
         res.status(200).json({ questions });
     } catch (error) {
         console.error("Error fetching questions:", error);
@@ -122,19 +126,6 @@ app.get("/api/user/fullname", authenticateToken, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
-app.get("/api/user/fullname/:userId", async (req, res) => {
-    try {
-      const user = await User.findById(req.params.userId);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-      res.json({ fullname: user.fullname }); // Assuming the User model has a `fullname` field
-    } catch (error) {
-      console.error("Error fetching user fullname:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
 
 // User logout
 app.get("/logout", (req, res) => {

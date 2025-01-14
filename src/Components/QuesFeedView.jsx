@@ -20,6 +20,31 @@ const QuesFeedView = () => {
     fetchQuestions();
   }, []);
 
+  const getTimeDifference = (timestamp) => {
+    const now = new Date();
+    const postedDate = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - postedDate) / 1000);
+
+    const intervals = [
+      { label: "yr", seconds: 31536000 },
+      { label: "mon", seconds: 2592000 },
+      { label: "wk", seconds: 604800 },
+      { label: "dy", seconds: 86400 },
+      { label: "hr", seconds: 3600 },
+      { label: "min", seconds: 60 },
+      { label: "s", seconds: 1 },
+    ];
+
+    for (const interval of intervals) {
+      const count = Math.floor(diffInSeconds / interval.seconds);
+      if (count > 0) {
+        return `${count} ${interval.label} ago`;
+      }
+    }
+
+    return "just now";
+  };
+
   return (
     <>
       <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
@@ -51,11 +76,11 @@ const QuesFeedView = () => {
                     : "0 answers"}
                 </span>
               </div>
-              <div className="flex flex-col gap-1 mobile:w-full tablet:w-full">
-                <p className="text-xs text-red-600 tracking-wider">
+              <div className="flex flex-col gap-1 laptop:w-3/4 mobile:w-full tablet:w-full">
+                <p className="text-xs text-red-600 tracking-wider w-full">
                   {question.title}
                 </p>
-                <p className="text-[0.6rem] tracking-wider">
+                <p className="text-[0.6rem] tracking-wider w-full">
                   {question.description}
                 </p>
                 <div className="flex items-center gap-2 text-[0.6rem] font-bold mobile:w-full tablet:w-full mobile:flex-wrap tablet:flex-wrap">
@@ -65,12 +90,12 @@ const QuesFeedView = () => {
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-1 text-[0.6rem] justify-end">
+                <div className="flex items-center gap-1 text-[0.6rem] justify-end w-full">
                   <span className="text-red-600 tracking-wider">
-                    {question.author}
+                    {question.author?.fullname || "Anonymous"}
                   </span>
                   <span className="text-gray-400">
-                    {new Date(question.timestamp).toLocaleString()}
+                    {getTimeDifference(question.timestamp)}
                   </span>
                 </div>
               </div>
