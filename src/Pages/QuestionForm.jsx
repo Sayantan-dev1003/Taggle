@@ -54,7 +54,7 @@ const QuestionForm = () => {
       setTitle("");
       setDescription("");
       setTags([]);
-      setTagInput(""); // Clear the tag input after submission
+      setTagInput(""); 
     } else {
       toast.error("Failed to create question."); // Error toast
     }
@@ -64,7 +64,7 @@ const QuestionForm = () => {
     <>
       <Header onToggleSidebar={toggleSidebar} />
       <Sidebar isVisible={isSidebarVisible} />
-      <div className="w-full bg-white p-4 pt-20 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
+      <div className="w-full bg-white p-4 pt-20 openSans flex flex-col items-start justify-between gap-2 laptop:w-2/3 laptop:mx-auto">
         <div className="flex flex-col justify-center items-center gap-2 w-full">
           <p className="montserrat text-xl mobile:w-3/4 mobile:text-center">
             Asking a question in Staging Ground

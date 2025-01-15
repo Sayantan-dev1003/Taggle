@@ -47,7 +47,7 @@ const NewestQuestions = () => {
 
   return (
     <>
-      <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
+      <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-2/3 laptop:mx-auto">
         <p className="text-lg text-gray-800">
           {questions.length} questions
         </p>

@@ -11,6 +11,7 @@ import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import CookiesPolicy from "./Pages/CookiesPolicy";
 import QuestionForm from "./Pages/QuestionForm";
 import Questions from "./Pages/Questions";
+import QuestionDetails from "./Pages/QuestionDetails";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/cookies-policy" element={<CookiesPolicy />}></Route>
         <Route path="/ask-question" element={<QuestionForm />}></Route>
         <Route path="/questions" element={<Questions />}></Route>
+        <Route path="/questions/:title" element={<QuestionDetails />}></Route>
       </Routes>
     </Router>
   )

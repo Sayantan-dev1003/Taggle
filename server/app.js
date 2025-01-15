@@ -125,6 +125,26 @@ app.get("/api/user/fullname", authenticateToken, async (req, res) => {
     }
 });
 
+// Route to fetch questions by title
+app.get("/api/questions/:title", async (req, res) => {
+    const { title } = req.params;
+
+    try {
+        const questions = await questionModel.find({ title: new RegExp(title, 'i') })
+            .populate('author', 'fullname')
+            .sort({ createdAt: -1 });
+
+        if (questions.length === 0) {
+            return res.status(404).json({ message: "No questions found with the given title" });
+        }
+
+        res.status(200).json({ questions });
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ message: "Error fetching questions" });
+    }
+});
+
 // User logout
 app.get("/logout", (req, res) => {
     res.cookie("token", "", { httpOnly: true, expires: new Date(0) });

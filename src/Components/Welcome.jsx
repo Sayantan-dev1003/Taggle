@@ -14,7 +14,7 @@ const Welcome = () => {
 
   return (
     <>
-      <div className="w-full bg-white p-4 openSans flex items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
+      <div className="w-full bg-white p-4 openSans flex items-start justify-between gap-2 laptop:w-2/3 laptop:mx-auto">
         <div className="flex flex-col w-[70vw]">
           <p className="text-2xl font-bold text-gray-800">
             Welcome to Taggle, {fullName}!

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const QuesFeedView = () => {
   const [questions, setQuestions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -13,7 +15,7 @@ const QuesFeedView = () => {
         const data = await response.json();
         setQuestions(data.questions.reverse());
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error("Error fetching questions:", error); 
       }
     };
 
@@ -47,7 +49,7 @@ const QuesFeedView = () => {
 
   return (
     <>
-      <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-3/5 laptop:mx-auto">
+      <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-2/3 laptop:mx-auto">
         <p className="text-lg font-bold text-gray-800">
           Interesting posts for you
         </p>
@@ -58,7 +60,8 @@ const QuesFeedView = () => {
           {questions.map((question, index) => (
             <div
               key={index}
-              className="w-full flex flex-col p-3 gap-1 border-b border-gray-300 laptop:flex-row laptop:items-start laptop:gap-4 mobile:w-full tablet:w-full"
+              className="w-full flex flex-col p-3 gap-1 border-b border-gray-300 cursor-pointer laptop:flex-row laptop:items-start laptop:gap-4 mobile:w-full tablet:w-full"
+              onClick={() => navigate(`/questions/${question.title}`)}
             >
               <div className="flex items-center gap-2 laptop:w-1/4 laptop:flex-col laptop:items-end mobile:w-full tablet:w-full">
                 <span>
