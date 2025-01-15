@@ -14,6 +14,7 @@ import {
 import Header from "../Components/Header";
 import Sidebar from "../Components/Sidebar";
 import Footer from "../Components/Footer";
+import PostAnswer from "../Components/PostAnswer";
 
 const QuestionDetails = () => {
   const { title } = useParams();
@@ -139,6 +140,9 @@ const QuestionDetails = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+              <div className="w-full mt-8">
+                <PostAnswer />
               </div>
             </div>
           </div>
