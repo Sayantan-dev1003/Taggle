@@ -14,12 +14,13 @@ import {
 import Header from "../Components/Header";
 import Sidebar from "../Components/Sidebar";
 import Footer from "../Components/Footer";
-import PostAnswer from "../Components/PostAnswer";
 
 const QuestionDetails = () => {
   const { title } = useParams();
   const [question, setQuestion] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [user, setUser ] = useState(null); 
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -41,8 +42,72 @@ const QuestionDetails = () => {
       }
     };
 
+    const fetchUser  = async () => {
+      try {
+        const response = await fetch("/api/user/fullname", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser (data.fullName);
+          setUserId(data.userId); 
+        }
+      } catch (error) {
+        console.error("Error fetching user: ", error);
+      }
+    };
+
     fetchQuestions();
+    fetchUser ();
   }, [title]);
+
+  const handleVote = async (type, isAdding) => {
+    try {
+      const response = await fetch(`/api/questions/${title}/vote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type, isAdding }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update vote count");
+      }
+      const updatedQuestion = await response.json();
+      setQuestion(updatedQuestion.question);
+    } catch (error) {
+      console.error("Error updating vote count: ", error);
+    }
+  };
+
+  const handleUpvote = () => {
+    const isCurrentlyUpvoted = question.upvotes.includes(userId);
+    const isCurrentlyDownvoted = question.downvotes.includes(userId);
+
+    if (isCurrentlyUpvoted) {
+      handleVote('upvote', false);
+    } else {
+      handleVote('upvote', true);
+      if (isCurrentlyDownvoted) {
+        handleVote('downvote', false); 
+      }
+    }
+  };
+
+  const handleDownvote = () => {
+    const isCurrentlyDownvoted = question.downvotes.includes(userId); 
+    const isCurrentlyUpvoted = question.upvotes.includes(userId);
+
+    if (isCurrentlyDownvoted) {
+      handleVote('downvote', false);
+    } else {
+      handleVote('downvote', true);
+      if (isCurrentlyUpvoted) {
+        handleVote('upvote', false);
+      }
+    }
+  };
 
   if (!question) {
     return <div>Loading...</div>;
@@ -90,10 +155,10 @@ const QuestionDetails = () => {
                   <h1 className="text-2xl font-medium">{question.title}</h1>
                   <div className="mobile:w-full flex mobile:items-end mobile:justify-end">
                     <button
-                        className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100"
-                        onClick={() => navigate("/ask-question")}
+                      className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100"
+                      onClick={() => navigate("/ask-question")}
                     >
-                        Ask Question
+                      Ask Question
                     </button>
                   </div>
                 </div>
@@ -101,7 +166,7 @@ const QuestionDetails = () => {
                   <span className="text-[0.65rem] text-gray-400">
                     Asked by{" "}
                     <span className="text-red-600 tracking-wider">
-                      {question.author?.fullname || "Anonymous"}
+                      {user || "Anonymous"}
                     </span>{" "}
                     on <span>{getTimeDifference(question.timestamp)}</span>
                   </span>
@@ -109,19 +174,22 @@ const QuestionDetails = () => {
               </div>
               <div className="w-full flex gap-6 mt-3">
                 <div className="flex flex-col gap-3">
-                  <div className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110">
-                    <FontAwesomeIcon icon={faThumbsUpReg} />
+                  <div
+                    className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
+                    onClick={handleUpvote}
+                  >
+                    <FontAwesomeIcon icon={question.upvotes.includes(userId) ? faThumbsUpSolid : faThumbsUpReg} />
                   </div>
                   <div className="flex items-center justify-center">
                     <p>
-                      {Array.isArray(question.upvotes) &&
-                      Array.isArray(question.downvotes)
-                        ? question.upvotes.length + question.downvotes.length
-                        : 0}
+                      {question.upvotes.length - question.downvotes.length}
                     </p>
                   </div>
-                  <div className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110">
-                    <FontAwesomeIcon icon={faThumbsDownReg} />
+                  <div
+                    className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
+                    onClick={handleDownvote}
+                  >
+                    <FontAwesomeIcon icon={question.downvotes.includes(userId) ? faThumbsDownSolid : faThumbsDownReg} />
                   </div>
                   <FontAwesomeIcon
                     icon={faBookmarkReg}
@@ -142,7 +210,22 @@ const QuestionDetails = () => {
                 </div>
               </div>
               <div className="w-full mt-8">
-                <PostAnswer />
+                <p class ="font-medium">Your answer</p>
+                <form>
+                  <textarea
+                    id="description"
+                    className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
+                    placeholder="Write your answer..."
+                    rows={8}
+                    required
+                  />
+                  <button
+                    className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs mt-4 p-2 hover:bg-red-100"
+                    onClick={() => navigate("/feed")}
+                  >
+                    Post Answer
+                  </button>
+                </form>
               </div>
             </div>
           </div>

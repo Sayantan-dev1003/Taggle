@@ -86,13 +86,13 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
             title,
             description,
             tags,
-            author: req.user.userid 
+            author: req.user.userid
         });
 
         await newQuestion.save();
         res.status(201).json({ message: "Question created successfully", question: newQuestion });
     } catch (error) {
-        console.error("Error creating question:", error); 
+        console.error("Error creating question:", error);
         res.status(500).json({ message: "Error creating question", error });
     }
 });
@@ -142,6 +142,47 @@ app.get("/api/questions/:title", async (req, res) => {
     } catch (error) {
         console.error("Error fetching questions:", error);
         res.status(500).json({ message: "Error fetching questions" });
+    }
+});
+
+// Route to handle upvoting and downvoting
+app.post("/api/questions/:title/vote", authenticateToken, async (req, res) => {
+    const { title } = req.params;
+    const { type, isAdding } = req.body; 
+
+    try {
+        const question = await questionModel.findOne({ title: new RegExp(title, 'i') });
+
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        if (type === 'upvote') {
+            if (isAdding) {
+                if (!question.upvotes.includes(req.user.userid)) {
+                    question.upvotes.push(req.user.userid);
+                }
+            } else {
+                question.upvotes = question.upvotes.filter(userId => userId.toString() !== req.user.userid.toString());
+            }
+        } else if (type === 'downvote') {
+            if (isAdding) {
+                if (!question.downvotes.includes(req.user.userid)) {
+                    question.downvotes.push(req.user.userid);
+                }
+                question.upvotes = question.upvotes.filter(userId => userId.toString() !== req.user.userid.toString());
+            } else {
+                question.downvotes = question.downvotes.filter(userId => userId.toString() !== req.user.userid.toString());
+            }
+        } else {
+            return res.status(400).json({ message: "Invalid vote type" });
+        }
+
+        await question.save();
+        res.status(200).json({ message: "Vote updated successfully", question });
+    } catch (error) {
+        console.error("Error updating vote count:", error);
+        res.status(500).json({ message: "Error updating vote count" });
     }
 });
 

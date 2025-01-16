@@ -161,6 +161,7 @@ const QuestionForm = () => {
                 className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
                 placeholder="Describe your problem in detail..."
                 value={description}
+                rows={8}
                 onChange={(e) => setDescription(e.target.value)}
                 onFocus={() => setActiveInfo("description")}
                 required
@@ -228,7 +229,7 @@ const QuestionForm = () => {
             </div>
           </div>
 
-          <div className="">
+          <div>
             <button className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100" onClick={() => navigate("/feed")}>
               Ask Question
             </button>

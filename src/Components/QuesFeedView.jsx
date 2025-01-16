@@ -31,7 +31,7 @@ const QuesFeedView = () => {
       { label: "yr", seconds: 31536000 },
       { label: "mon", seconds: 2592000 },
       { label: "wk", seconds: 604800 },
-      { label: "dy", seconds: 86400 },
+      { label: "d", seconds: 86400 },
       { label: "hr", seconds: 3600 },
       { label: "min", seconds: 60 },
       { label: "s", seconds: 1 },
@@ -67,7 +67,7 @@ const QuesFeedView = () => {
                 <span>
                   {Array.isArray(question.upvotes) &&
                   Array.isArray(question.downvotes)
-                    ? question.upvotes.length + question.downvotes.length
+                    ? question.upvotes.length - question.downvotes.length
                     : 0}{" "}
                   votes
                 </span>

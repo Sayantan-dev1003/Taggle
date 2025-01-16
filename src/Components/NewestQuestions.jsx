@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NewestQuestions = () => {
   const [questions, setQuestions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -29,7 +31,7 @@ const NewestQuestions = () => {
       { label: "yr", seconds: 31536000 },
       { label: "mon", seconds: 2592000 },
       { label: "wk", seconds: 604800 },
-      { label: "dy", seconds: 86400 },
+      { label: "d", seconds: 86400 },
       { label: "hr", seconds: 3600 },
       { label: "min", seconds: 60 },
       { label: "s", seconds: 1 },
@@ -56,6 +58,7 @@ const NewestQuestions = () => {
             <div
               key={index}
               className="w-full flex flex-col p-3 gap-1 border-b border-gray-300 laptop:flex-row laptop:items-start laptop:gap-4 mobile:w-full tablet:w-full"
+              onClick={() => navigate(`/questions/${question.title}`)}
             >
               <div className="flex items-center gap-2 laptop:w-1/4 laptop:flex-col laptop:items-end mobile:w-full tablet:w-full">
                 <span>
