@@ -40,8 +40,8 @@ const authenticateToken = (req, res, next) => {
 // User registration
 app.post("/register", async (req, res) => {
     const { fullname, email, password } = req.body;
-    const existingUser = await userModel.findOne({ $or: [{ email }, { fullname }] });
-    if (existingUser) return res.status(401).json("Something went wrong");
+    const existingUser  = await userModel.findOne({ $or: [{ email }, { fullname }] });
+    if (existingUser ) return res.status(401).json("Something went wrong");
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -119,7 +119,7 @@ app.get("/api/user/fullname", authenticateToken, async (req, res) => {
     try {
         const user = await userModel.findById(req.user.userid);
         if (!user) return res.sendStatus(404);
-        res.status(200).json({ fullName: user.fullname });
+        res.status(200).json({ fullName: user.fullname, userId: user._id });
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
@@ -148,41 +148,36 @@ app.get("/api/questions/:title", async (req, res) => {
 // Route to handle upvoting and downvoting
 app.post("/api/questions/:title/vote", authenticateToken, async (req, res) => {
     const { title } = req.params;
-    const { type, isAdding } = req.body; 
-
+    const { type, isAdding } = req.body;
+    const userId = req.user.userid; // Ensure user ID is obtained correctly
+  
     try {
-        const question = await questionModel.findOne({ title: new RegExp(title, 'i') });
-
-        if (!question) {
-            return res.status(404).json({ message: "Question not found" });
-        }
-
-        if (type === 'upvote') {
-            if (isAdding) {
-                if (!question.upvotes.includes(req.user.userid)) {
-                    question.upvotes.push(req.user.userid);
-                }
-            } else {
-                question.upvotes = question.upvotes.filter(userId => userId.toString() !== req.user.userid.toString());
-            }
-        } else if (type === 'downvote') {
-            if (isAdding) {
-                if (!question.downvotes.includes(req.user.userid)) {
-                    question.downvotes.push(req.user.userid);
-                }
-                question.upvotes = question.upvotes.filter(userId => userId.toString() !== req.user.userid.toString());
-            } else {
-                question.downvotes = question.downvotes.filter(userId => userId.toString() !== req.user.userid.toString());
-            }
+      const question = await questionModel.findOne({ title });
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+  
+      if (type === "upvote") {
+        if (isAdding) {
+          question.upvotes.addToSet(userId); // Add userId if not present
+          question.downvotes.pull(userId);  // Remove from downvotes if present
         } else {
-            return res.status(400).json({ message: "Invalid vote type" });
+          question.upvotes.pull(userId);    // Remove userId
         }
-
-        await question.save();
-        res.status(200).json({ message: "Vote updated successfully", question });
+      } else if (type === "downvote") {
+        if (isAdding) {
+          question.downvotes.addToSet(userId); // Add userId if not present
+          question.upvotes.pull(userId);      // Remove from upvotes if present
+        } else {
+          question.downvotes.pull(userId);    // Remove userId
+        }
+      }
+  
+      await question.save();
+      res.json({ question });
     } catch (error) {
-        console.error("Error updating vote count:", error);
-        res.status(500).json({ message: "Error updating vote count" });
+      console.error("Error handling vote:", error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
 });
 

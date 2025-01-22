@@ -16,11 +16,13 @@ import Sidebar from "../Components/Sidebar";
 import Footer from "../Components/Footer";
 
 const QuestionDetails = () => {
-  const { title } = useParams();
+  const { title } = useParams(); // Fetch title from route params
   const [question, setQuestion] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [user, setUser ] = useState(null); 
+  const [user, setUser ] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -28,21 +30,24 @@ const QuestionDetails = () => {
   };
 
   useEffect(() => {
-    const fetchQuestions = async () => {
+    const fetchQuestionDetails = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`/api/questions/${title}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch questions");
+          throw new Error("Failed to fetch question details");
         }
-
         const data = await response.json();
         setQuestion(data.questions[0]);
       } catch (error) {
+        setError(error.message);
         console.error("Error fetching questions: ", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchUser  = async () => {
+    const fetchUserDetails = async () => {
       try {
         const response = await fetch("/api/user/fullname", {
           method: "GET",
@@ -51,67 +56,84 @@ const QuestionDetails = () => {
         if (response.ok) {
           const data = await response.json();
           setUser (data.fullName);
-          setUserId(data.userId); 
+          setUserId(data.userId);
         }
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
     };
 
-    fetchQuestions();
-    fetchUser ();
+    fetchQuestionDetails();
+    fetchUserDetails();
   }, [title]);
 
   const handleVote = async (type, isAdding) => {
     try {
       const response = await fetch(`/api/questions/${title}/vote`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ type, isAdding }),
       });
+  
       if (!response.ok) {
         throw new Error("Failed to update vote count");
       }
+  
       const updatedQuestion = await response.json();
       setQuestion(updatedQuestion.question);
     } catch (error) {
       console.error("Error updating vote count: ", error);
     }
   };
+  
 
   const handleUpvote = () => {
+    if (!question || !userId) return;
     const isCurrentlyUpvoted = question.upvotes.includes(userId);
     const isCurrentlyDownvoted = question.downvotes.includes(userId);
 
     if (isCurrentlyUpvoted) {
-      handleVote('upvote', false);
+      handleVote("upvote", false);
     } else {
-      handleVote('upvote', true);
+      handleVote("upvote", true);
       if (isCurrentlyDownvoted) {
-        handleVote('downvote', false); 
+        handleVote("downvote", false);
       }
     }
   };
 
   const handleDownvote = () => {
-    const isCurrentlyDownvoted = question.downvotes.includes(userId); 
+    if (!question || !userId) return;
+    const isCurrentlyDownvoted = question.downvotes.includes(userId);
     const isCurrentlyUpvoted = question.upvotes.includes(userId);
 
     if (isCurrentlyDownvoted) {
-      handleVote('downvote', false);
+      handleVote("downvote", false);
     } else {
-      handleVote('downvote', true);
+      handleVote("downvote", true);
       if (isCurrentlyUpvoted) {
-        handleVote('upvote', false);
+        handleVote("upvote", false);
       }
     }
   };
 
-  if (!question) {
-    return <div>Loading...</div>;
-  }
+  const handleAnswerSubmit = (event) => {
+    event.preventDefault();
+    const answer = event.target.elements.description.value.trim();
+
+    if (!answer) {
+      alert("Answer cannot be empty");
+      return;
+    }
+
+    // Logic to send the answer to the server
+    console.log("Answer submitted:", answer);
+
+    // Redirect to feed after submission
+    navigate("/feed");
+  };
 
   const getTimeDifference = (timestamp) => {
     const now = new Date();
@@ -138,21 +160,20 @@ const QuestionDetails = () => {
     return "just now";
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <>
       <div className="flex flex-col">
-        <Header
-          onToggleSidebar={toggleSidebar}
-          className="fixed top-0 left-0 right-0 z-10 bg-white"
-        />
-
+        <Header onToggleSidebar={toggleSidebar} className="fixed top-0 left-0 right-0 z-10 bg-white" />
         <Sidebar isVisible={isSidebarVisible} />
         <div className="flex flex-grow mt-14 openSans">
           <div className="flex-col flex-grow overflow-y-auto">
             <div className="w-full bg-white p-4 openSans flex flex-col items-start justify-between gap-2 laptop:w-2/3 laptop:mx-auto">
               <div className="w-full border-b border-b-gray-300">
                 <div className="w-full flex justify-between mobile:flex-col-reverse mobile:gap-2">
-                  <h1 className="text-2xl font-medium">{question.title}</h1>
+                  <h1 className="text-2xl font-medium">{question?.title || "Loading title..."}</h1>
                   <div className="mobile:w-full flex mobile:items-end mobile:justify-end">
                     <button
                       className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs px-2 py-2 hover:bg-red-100"
@@ -165,10 +186,8 @@ const QuestionDetails = () => {
                 <div className="mb-4">
                   <span className="text-[0.65rem] text-gray-400">
                     Asked by{" "}
-                    <span className="text-red-600 tracking-wider">
-                      {user || "Anonymous"}
-                    </span>{" "}
-                    on <span>{getTimeDifference(question.timestamp)}</span>
+                    <span className="text-red-600 tracking-wider">{user || "Anonymous"}</span> on{" "}
+                    <span>{question?.timestamp ? getTimeDifference(question.timestamp) : "N/A"}</span>
                   </span>
                 </div>
               </div>
@@ -178,18 +197,28 @@ const QuestionDetails = () => {
                     className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
                     onClick={handleUpvote}
                   >
-                    <FontAwesomeIcon icon={question.upvotes.includes(userId) ? faThumbsUpSolid : faThumbsUpReg} />
+                    <FontAwesomeIcon
+                      icon={
+                        question?.upvotes.includes(userId)
+                          ? faThumbsUpSolid
+                          : faThumbsUpReg
+                      }
+                    />
                   </div>
                   <div className="flex items-center justify-center">
-                    <p>
-                      {question.upvotes.length - question.downvotes.length}
-                    </p>
+                    <p>{question?.upvotes.length - question?.downvotes.length || 0}</p>
                   </div>
                   <div
                     className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
                     onClick={handleDownvote}
                   >
-                    <FontAwesomeIcon icon={question.downvotes.includes(userId) ? faThumbsDownSolid : faThumbsDownReg} />
+                    <FontAwesomeIcon
+                      icon={
+                        question?.downvotes.includes(userId)
+                          ? faThumbsDownSolid
+                          : faThumbsDownReg
+                      }
+                    />
                   </div>
                   <FontAwesomeIcon
                     icon={faBookmarkReg}
@@ -197,11 +226,9 @@ const QuestionDetails = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-8">
-                  <p className="text-sm tracking-wide text-gray-600">
-                    {question.description}
-                  </p>
+                  <p className="text-sm tracking-wide text-gray-600">{question?.description || "No description available"}</p>
                   <div className="flex items-center gap-2 text-[0.6rem] font-bold mobile:w-full tablet:w-full mobile:flex-wrap tablet:flex-wrap">
-                    {question.tags.map((tag, tagIndex) => (
+                    {question?.tags.map((tag, tagIndex) => (
                       <span key={tagIndex} className="bg-slate-200 rounded p-1">
                         {tag}
                       </span>
@@ -210,8 +237,8 @@ const QuestionDetails = () => {
                 </div>
               </div>
               <div className="w-full mt-8">
-                <p class ="font-medium">Your answer</p>
-                <form>
+                <p className="font-medium">Your answer</p>
+                <form onSubmit={handleAnswerSubmit}>
                   <textarea
                     id="description"
                     className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
@@ -220,8 +247,8 @@ const QuestionDetails = () => {
                     required
                   />
                   <button
+                    type="submit"
                     className="border openSans border-red-600 bg-white font-light text-red-600 rounded text-xs mt-4 p-2 hover:bg-red-100"
-                    onClick={() => navigate("/feed")}
                   >
                     Post Answer
                   </button>
