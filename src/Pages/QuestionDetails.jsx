@@ -16,13 +16,13 @@ import Sidebar from "../Components/Sidebar";
 import Footer from "../Components/Footer";
 
 const QuestionDetails = () => {
-  const { title } = useParams(); // Fetch title from route params
+  const { title } = useParams();
   const [question, setQuestion] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [user, setUser ] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [answers, setAnswers] = useState([]);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -38,7 +38,7 @@ const QuestionDetails = () => {
           throw new Error("Failed to fetch question details");
         }
         const data = await response.json();
-        setQuestion(data.questions[0]);
+        setQuestion(data.questions[0]); // Ensure the question includes the author field
       } catch (error) {
         setError(error.message);
         console.error("Error fetching questions: ", error);
@@ -55,7 +55,6 @@ const QuestionDetails = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          setUser (data.fullName);
           setUserId(data.userId);
         }
       } catch (error) {
@@ -63,8 +62,23 @@ const QuestionDetails = () => {
       }
     };
 
+    const fetchAnswers = async () => {
+      try {
+        const response = await fetch(`/api/questions/${title}/answers`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch answers");
+        }
+        const data = await response.json();
+        // Reverse the order of answers to show the latest first
+        setAnswers(data.answers.reverse());
+      } catch (error) {
+        console.error("Error fetching answers: ", error);
+      }
+    };
+
     fetchQuestionDetails();
     fetchUserDetails();
+    fetchAnswers(); // Fetch answers for the question
   }, [title]);
 
   const handleVote = async (type, isAdding) => {
@@ -76,18 +90,17 @@ const QuestionDetails = () => {
         },
         body: JSON.stringify({ type, isAdding }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to update vote count");
       }
-  
+
       const updatedQuestion = await response.json();
       setQuestion(updatedQuestion.question);
     } catch (error) {
       console.error("Error updating vote count: ", error);
     }
   };
-  
 
   const handleUpvote = () => {
     if (!question || !userId) return;
@@ -119,20 +132,36 @@ const QuestionDetails = () => {
     }
   };
 
-  const handleAnswerSubmit = (event) => {
+  const handleAnswerSubmit = async (event) => {
     event.preventDefault();
-    const answer = event.target.elements.description.value.trim();
+    const answerContent = event.target.elements.description.value.trim();
 
-    if (!answer) {
+    if (!answerContent) {
       alert("Answer cannot be empty");
       return;
     }
 
-    // Logic to send the answer to the server
-    console.log("Answer submitted:", answer);
+    try {
+      const response = await fetch(`/api/questions/${title}/answers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: answerContent }),
+      });
 
-    // Redirect to feed after submission
-    navigate("/feed");
+      if (!response.ok) {
+        throw new Error("Failed to submit answer");
+      }
+
+      const newAnswer = await response.json();
+      // Add new answer to the beginning of the answers array
+      setAnswers((prevAnswers) => [newAnswer.answer, ...prevAnswers]); // Add new answer to the beginning
+      event.target.reset(); // Clear the textarea
+    } catch (error) {
+      console.error("Error submitting answer: ", error);
+      alert("Error submitting answer: " + error.message);
+    }
   };
 
   const getTimeDifference = (timestamp) => {
@@ -186,12 +215,12 @@ const QuestionDetails = () => {
                 <div className="mb-4">
                   <span className="text-[0.65rem] text-gray-400">
                     Asked by{" "}
-                    <span className="text-red-600 tracking-wider">{user || "Anonymous"}</span> on{" "}
+                    <span className="text-red-600 tracking-wider">{question?.author.fullname || "Anonymous"}</span> on{" "}
                     <span>{question?.timestamp ? getTimeDifference(question.timestamp) : "N/A"}</span>
                   </span>
                 </div>
               </div>
-              <div className="w-full flex gap-6 mt-3">
+              <div className="w-full flex gap-6 my-3 border-b border-b-gray-300">
                 <div className="flex flex-col gap-3">
                   <div
                     className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
@@ -237,12 +266,30 @@ const QuestionDetails = () => {
                 </div>
               </div>
               <div className="w-full mt-8">
+                <p className="font-medium">Answers</p>
+                {answers.length > 0 ? (
+                  answers.map((answer, index) => (
+                    <div key={index} className="border-b border-b-gray-300 p-4">
+                      <p className="text-sm tracking-wide text-gray-600">{answer.content}</p>
+                      <span className="text-[0.65rem] text-gray-400">
+                        Answered by{" "}
+                        <span className="text-red-600 tracking-wider">{answer?.author.fullname || "Anonymous"}</span> on{" "}
+                        <span>{getTimeDifference(answer.timestamp)}</span>
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p>No answers yet.</p>
+                )}
+              </div>
+              <div className="w-full mt-8">
                 <p className="font-medium">Your answer</p>
                 <form onSubmit={handleAnswerSubmit}>
                   <textarea
                     id="description"
                     className="w-full border border-gray-300 rounded-md mt-4 p-2 text-[0.7rem]"
                     placeholder="Write your answer..."
+                    name="content"
                     rows={8}
                     required
                   />

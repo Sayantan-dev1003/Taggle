@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import userModel from "./models/userModel.js";
 import questionModel from "./models/questionModel.js"
+import answerModel from "./models/answerModel.js"
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -178,6 +179,53 @@ app.post("/api/questions/:title/vote", authenticateToken, async (req, res) => {
     } catch (error) {
       console.error("Error handling vote:", error);
       res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// Route to fetch answers for a specific question
+app.get("/api/questions/:title/answers", async (req, res) => {
+    const { title } = req.params;
+
+    try {
+        const question = await questionModel.findOne({ title });
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        const answers = await answerModel.find({ questionID: question._id })
+            .populate('author', 'fullname') // Populate the author's full name
+            .sort({ timestamp: -1 }); // Sort answers by timestamp in descending order
+
+        res.status(200).json({ answers }); // Return all answers
+    } catch (error) {
+        console.error("Error fetching answers:", error);
+        res.status(500).json({ message: "Error fetching answers" });
+    }
+});
+
+// Route to post an answer for a specific question
+app.post("/api/questions/:title/answers", authenticateToken, async (req, res) => {
+    const { title } = req.params;
+    const { content } = req.body; // Get content from request body
+
+    try {
+        const question = await questionModel.findOne({ title });
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        const newAnswer = new answerModel({
+            content,
+            questionID: question._id,
+            author: req.user.userid // Associate answer with the logged-in user
+        });
+
+        await newAnswer.save(); // Save the new answer
+
+        res.status(201).json({ message: "Answer posted successfully", answer: newAnswer }); 
+    } catch (error) {
+        console.error("Error posting answer:", error);
+        res.status(500).json({ message: "Error posting answer" });
     }
 });
 
