@@ -70,7 +70,7 @@ const QuestionDetails = () => {
         }
         const data = await response.json();
         // Reverse the order of answers to show the latest first
-        setAnswers(data.answers.reverse());
+        setAnswers(data.answers);
       } catch (error) {
         console.error("Error fetching answers: ", error);
       }
@@ -254,7 +254,7 @@ const QuestionDetails = () => {
                     className="text-gray-400 text-lg transition-transform hover:scale-110 m-2"
                   />
                 </div>
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-8 mb-4">
                   <p className="text-sm tracking-wide text-gray-600">{question?.description || "No description available"}</p>
                   <div className="flex items-center gap-2 text-[0.6rem] font-bold mobile:w-full tablet:w-full mobile:flex-wrap tablet:flex-wrap">
                     {question?.tags.map((tag, tagIndex) => (
@@ -265,15 +265,15 @@ const QuestionDetails = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full mt-8">
-                <p className="font-medium">Answers</p>
+              <div className="w-full mt-6">
+                <p className="font-medium">{answers.length}{" "}Answers</p>
                 {answers.length > 0 ? (
                   answers.map((answer, index) => (
                     <div key={index} className="border-b border-b-gray-300 p-4">
                       <p className="text-sm tracking-wide text-gray-600">{answer.content}</p>
                       <span className="text-[0.65rem] text-gray-400">
                         Answered by{" "}
-                        <span className="text-red-600 tracking-wider">{answer?.author.fullname || "Anonymous"}</span> on{" "}
+                        <span className="text-red-600 tracking-wider">{answer?.author?.fullname || "Anonymous"}</span> on{" "}
                         <span>{getTimeDifference(answer.timestamp)}</span>
                       </span>
                     </div>

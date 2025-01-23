@@ -222,6 +222,10 @@ app.post("/api/questions/:title/answers", authenticateToken, async (req, res) =>
 
         await newAnswer.save(); // Save the new answer
 
+        // Update the question with the new answer's ID
+        question.answers.push(newAnswer._id);
+        await question.save();
+
         res.status(201).json({ message: "Answer posted successfully", answer: newAnswer }); 
     } catch (error) {
         console.error("Error posting answer:", error);
