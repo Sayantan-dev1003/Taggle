@@ -73,6 +73,18 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// Route the get current user's fullname
+app.get("/api/user/fullname", authenticateToken, async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user.userid);
+        if (!user) return res.sendStatus(404);
+        res.status(200).json({ fullName: user.fullname, userId: user._id });
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Error fetching user" });
+    }
+});
+
 // Route to create a question
 app.post("/api/questions", authenticateToken, async (req, res) => {
     const { title, description, tags } = req.body;
@@ -87,10 +99,13 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
             title,
             description,
             tags,
-            author: req.user.userid
+            authorID: req.user.userid,
         });
 
         await newQuestion.save();
+        // Update the quesAsked attribute of userModel with the new question's id
+        await userModel.findByIdAndUpdate(req.user.userid, { $addToSet: { quesAsked: newQuestion._id } }, { new: true });
+
         res.status(201).json({ message: "Question created successfully", question: newQuestion });
     } catch (error) {
         console.error("Error creating question:", error);
@@ -98,12 +113,37 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
     }
 });
 
+// Route to get questions asked by the current user
+app.get("/api/user/questions", authenticateToken, async (req, res) => {
+    try {
+        // Find the user and get their quesAsked array
+        const user = await userModel.findById(req.user.userid).populate('quesAsked');
+        if (!user) return res.sendStatus(404);
+
+        // Extract the questions from the populated quesAsked
+        const questions = user.quesAsked;
+
+        // Populate the author's full name for each question
+        const populatedQuestions = await questionModel.populate(questions, {
+            path: 'authorID',
+            select: 'fullname'
+        });
+
+        res.status(200).json({ questions: populatedQuestions });
+    } catch (error) {
+        console.error("Error fetching user's questions:", error);
+        res.status(500).json({ message: "Error fetching user's questions" });
+    }
+});
+
 // Route to get all questions
 app.get("/api/display-questions", async (req, res) => {
     try {
+        // Fetch all questions and populate the author's full name
         const questions = await questionModel.find()
-            .populate('author', 'fullname')
-            .sort({ createdAt: -1 });
+            .populate('authorID', 'fullname') // Populate only the fullname
+            .sort({ timestamp: -1 }); // Sort by timestamp
+
         res.status(200).json({ questions });
     } catch (error) {
         console.error("Error fetching questions:", error);
@@ -230,6 +270,75 @@ app.post("/api/questions/:title/answers", authenticateToken, async (req, res) =>
     } catch (error) {
         console.error("Error posting answer:", error);
         res.status(500).json({ message: "Error posting answer" });
+    }
+});
+
+app.post('/api/questions/:title/save', authenticateToken, async (req, res) => {
+    const { title } = req.params;
+    const userId = req.user.userid; // Get the user ID from the token
+
+    try {
+        // Find the question by title
+        const question = await questionModel.findOne({ title });
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        // Check if the user ID is already in the saves array
+        if (question.saves.includes(userId)) {
+            return res.status(400).json({ message: "Question already saved" });
+        }
+
+        // Add the user ID to the saves array
+        question.saves.push(userId);
+        await question.save();
+
+        return res.status(200).json({ message: "Question saved" });
+    } catch (error) {
+        console.error("Error saving question:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// Endpoint to unsave a question
+app.delete('/api/questions/:title/save', authenticateToken, async (req, res) => {
+    const { title } = req.params;
+    const userId = req.user.userid; // Get the user ID from the token
+
+    try {
+        // Find the question by title
+        const question = await questionModel.findOne({ title });
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        // Check if the user ID is in the saves array
+        if (!question.saves.includes(userId)) {
+            return res.status(400).json({ message: "Question not saved" });
+        }
+
+        // Remove the user ID from the saves array
+        question.saves = question.saves.filter(id => id.toString() !== userId);
+        await question.save();
+
+        return res.status(200).json({ message: "Question unsaved" });
+    } catch (error) {
+        console.error("Error unsaving question:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// Endpoint to get saved questions for the authenticated user
+app.get('/api/saved-questions', authenticateToken, async (req, res) => {
+    const userId = req.user.userid; // Get the user ID from the token
+
+    try {
+        // Find all questions where the user ID is in the saves array
+        const savedQuestions = await questionModel.find({ saves: userId });
+        return res.status(200).json({ questions: savedQuestions });
+    } catch (error) {
+        console.error("Error fetching saved questions:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 });
 

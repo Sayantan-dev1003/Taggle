@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Header from "../Components/Header";
@@ -48,13 +48,13 @@ const QuestionForm = () => {
       body: JSON.stringify({ title, description, tags }),
     });
 
-    const data = await response.json();
-    if (response.ok) {
+    const result = await response.json();
+    if (result.message === "Question created successfully") {
       toast.success("Question created successfully!"); // Success toast
       setTitle("");
       setDescription("");
       setTags([]);
-      setTagInput(""); 
+      setTagInput("");
     } else {
       toast.error("Failed to create question."); // Error toast
     }
@@ -80,9 +80,8 @@ const QuestionForm = () => {
         >
           <div className="w-full flex flex-col gap-2">
             <div
-              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
-                activeInfo === "title" ? "block" : "hidden"
-              }`}
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "title" ? "block" : "hidden"
+                }`}
             >
               <FontAwesomeIcon
                 icon={faPencil}
@@ -122,9 +121,8 @@ const QuestionForm = () => {
 
           <div className="w-full flex flex-col gap-2">
             <div
-              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
-                activeInfo === "description" ? "block" : "hidden"
-              }`}
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "description" ? "block" : "hidden"
+                }`}
             >
               <FontAwesomeIcon
                 icon={faPencil}
@@ -171,9 +169,8 @@ const QuestionForm = () => {
 
           <div className="w-full">
             <div
-              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${
-                activeInfo === "tags" ? "block" : "hidden"
-              }`}
+              className={`info w-full border border-gray-300 rounded-md p-5 flex gap-4 ${activeInfo === "tags" ? "block" : "hidden"
+                }`}
             >
               <FontAwesomeIcon
                 icon={faPencil}

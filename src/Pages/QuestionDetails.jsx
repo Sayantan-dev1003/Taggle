@@ -9,6 +9,7 @@ import {
 import {
   faThumbsDown as faThumbsDownSolid,
   faThumbsUp as faThumbsUpSolid,
+  faBookmark as faBookmarkSolid
 } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../Components/Header";
@@ -23,6 +24,7 @@ const QuestionDetails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -164,6 +166,25 @@ const QuestionDetails = () => {
     }
   };
 
+  const handleSaveQuestion = async () => {
+    try {
+      const response = await fetch(`/api/questions/${title}/save`, {
+        method: isSaved ? "DELETE" : "POST", // Use DELETE to unsave
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save question");
+      }
+
+      setIsSaved((prev) => !prev); // Toggle saved status
+    } catch (error) {
+      console.error("Error saving question: ", error);
+    }
+  };
+
   const getTimeDifference = (timestamp) => {
     const now = new Date();
     const postedDate = new Date(timestamp);
@@ -215,7 +236,7 @@ const QuestionDetails = () => {
                 <div className="mb-4">
                   <span className="text-[0.65rem] text-gray-400">
                     Asked by{" "}
-                    <span className="text-red-600 tracking-wider">{question?.author.fullname || "Anonymous"}</span> on{" "}
+                    <span className="text-red-600 tracking-wider">{question.authorFullname || "Anonymous"}</span> on{" "}
                     <span>{question?.timestamp ? getTimeDifference(question.timestamp) : "N/A"}</span>
                   </span>
                 </div>
@@ -249,10 +270,14 @@ const QuestionDetails = () => {
                       }
                     />
                   </div>
-                  <FontAwesomeIcon
-                    icon={faBookmarkReg}
-                    className="text-gray-400 text-lg transition-transform hover:scale-110 m-2"
-                  />
+                  <div
+                    className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
+                    onClick={handleSaveQuestion} // Add click handler
+                  >
+                    <FontAwesomeIcon
+                      icon={isSaved ? faBookmarkSolid : faBookmarkReg} // Toggle icon
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col gap-8 mb-4">
                   <p className="text-sm tracking-wide text-gray-600">{question?.description || "No description available"}</p>
@@ -273,7 +298,7 @@ const QuestionDetails = () => {
                       <p className="text-sm tracking-wide text-gray-600">{answer.content}</p>
                       <span className="text-[0.65rem] text-gray-400">
                         Answered by{" "}
-                        <span className="text-red-600 tracking-wider">{answer?.author?.fullname || "Anonymous"}</span> on{" "}
+                        <span className="text-red-600 tracking-wider">{answer.authorFullname || "Anonymous"}</span> on{" "}
                         <span>{getTimeDifference(answer.timestamp)}</span>
                       </span>
                     </div>

@@ -9,8 +9,13 @@ const answerSchema = mongoose.Schema({
         ref: "question",
         required: true
     },
-    author: {
+    authorID: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+        required: true
+    },
+    authorFullname: {
+        type: String,
         ref: "user",
         required: true
     },
@@ -28,6 +33,17 @@ const answerSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
+});
+
+answerSchema.virtual('author', {
+    ref: 'user',
+    localField: 'author',
+    foreignField: '_id',
+    justOne: true // Only one author
+});
+
+answerSchema.pre('find', function() {
+    this.populate('author');
 });
 
 export default mongoose.model("answer", answerSchema);

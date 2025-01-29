@@ -92,7 +92,7 @@ const NewestQuestions = () => {
                 </div>
                 <div className="flex items-center gap-1 text-[0.6rem] justify-end w-full">
                   <span className="text-red-600 tracking-wider">
-                    {question.author?.fullname || "Anonymous"}
+                    {question.authorFullname || "Anonymous"}
                   </span>
                   <span className="text-gray-400">
                     {getTimeDifference(question.timestamp)}
