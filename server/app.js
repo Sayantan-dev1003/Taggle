@@ -74,11 +74,11 @@ app.post("/login", async (req, res) => {
 });
 
 // Route the get current user's fullname
-app.get("/api/user/fullname", authenticateToken, async (req, res) => {
+app.get("/api/user/userid", authenticateToken, async (req, res) => {
     try {
         const user = await userModel.findById(req.user.userid);
         if (!user) return res.sendStatus(404);
-        res.status(200).json({ fullName: user.fullname, userId: user._id });
+        res.status(200).json({ userId: user._id });
     } catch (error) {
         console.error("Error fetching user:", error);
         res.status(500).json({ message: "Error fetching user" });
@@ -155,31 +155,32 @@ app.get("/feed", authenticateToken, (req, res) => {
     res.status(200).json({ message: "Feed fetched successfully" });
 })
 
-// Route to get the full name of the authenticated user
-app.get("/api/user/fullname", authenticateToken, async (req, res) => {
-    try {
-        const user = await userModel.findById(req.user.userid);
-        if (!user) return res.sendStatus(404);
-        res.status(200).json({ fullName: user.fullname, userId: user._id });
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
-
 // Route to fetch questions by title
 app.get("/api/questions/:title", async (req, res) => {
     const { title } = req.params;
 
     try {
+        // Find the question based on the title
         const questions = await questionModel.find({ title: new RegExp(title, 'i') })
-            .populate('author', 'fullname')
-            .sort({ createdAt: -1 });
+            .sort({ timestamp: -1 });
 
         if (questions.length === 0) {
             return res.status(404).json({ message: "No questions found with the given title" });
         }
 
-        res.status(200).json({ questions });
+        // Get the question ID
+        const questionId = questions[0]._id;
+
+        // Find the user whose quesAsked array contains the question ID
+        const user = await userModel.findOne({ quesAsked: questionId }).select('fullname');
+
+        // Prepare the response object
+        const response = {
+            questions,
+            user: user ? { fullname: user.fullname } : { fullname: "Anonymous" } // Include user data
+        };
+
+        res.status(200).json(response);
     } catch (error) {
         console.error("Error fetching questions:", error);
         res.status(500).json({ message: "Error fetching questions" });
@@ -233,7 +234,7 @@ app.get("/api/questions/:title/answers", async (req, res) => {
         }
 
         const answers = await answerModel.find({ questionID: question._id })
-            .populate('author', 'fullname') // Populate the author's full name
+            .populate('authorID', 'fullname') // Populate the author's full name
             .sort({ timestamp: -1 }); // Sort answers by timestamp in descending order
 
         res.status(200).json({ answers }); // Return all answers

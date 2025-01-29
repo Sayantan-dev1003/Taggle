@@ -21,6 +21,7 @@ const QuestionDetails = () => {
   const [question, setQuestion] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [fullname, setFullname] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState([]);
@@ -40,7 +41,8 @@ const QuestionDetails = () => {
           throw new Error("Failed to fetch question details");
         }
         const data = await response.json();
-        setQuestion(data.questions[0]); // Ensure the question includes the author field
+        setQuestion(data.questions[0]); 
+        setFullname(data.user.fullname)
       } catch (error) {
         setError(error.message);
         console.error("Error fetching questions: ", error);
@@ -51,7 +53,7 @@ const QuestionDetails = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch("/api/user/fullname", {
+        const response = await fetch("/api/user/userid", {
           method: "GET",
           credentials: "include",
         });
@@ -236,7 +238,7 @@ const QuestionDetails = () => {
                 <div className="mb-4">
                   <span className="text-[0.65rem] text-gray-400">
                     Asked by{" "}
-                    <span className="text-red-600 tracking-wider">{question.authorFullname || "Anonymous"}</span> on{" "}
+                    <span className="text-red-600 tracking-wider">{fullname || "Anonymous"}</span> on{" "}
                     <span>{question?.timestamp ? getTimeDifference(question.timestamp) : "N/A"}</span>
                   </span>
                 </div>
