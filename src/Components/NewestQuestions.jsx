@@ -13,7 +13,7 @@ const NewestQuestions = () => {
           throw new Error("Failed to fetch questions");
         }
         const data = await response.json();
-        setQuestions(data.questions.reverse());
+        setQuestions(data.questions);
       } catch (error) {
         console.error("Error fetching questions:", error);
       }
@@ -63,16 +63,15 @@ const NewestQuestions = () => {
               <div className="flex items-center gap-2 laptop:w-1/4 laptop:flex-col laptop:items-end mobile:w-full tablet:w-full">
                 <span>
                   {Array.isArray(question.upvotes) &&
-                  Array.isArray(question.downvotes)
+                    Array.isArray(question.downvotes)
                     ? question.upvotes.length + question.downvotes.length
                     : 0}{" "}
                   votes
                 </span>
                 <span className="border border-green-900 bg-white font-light text-green-900 py-0.5 px-1 rounded">
                   {Array.isArray(question.answers)
-                    ? `${question.answers.length} answer${
-                        question.answers.length !== 1 ? "s" : ""
-                      }`
+                    ? `${question.answers.length} answer${question.answers.length !== 1 ? "s" : ""
+                    }`
                     : "0 answers"}
                 </span>
               </div>
@@ -92,7 +91,7 @@ const NewestQuestions = () => {
                 </div>
                 <div className="flex items-center gap-1 text-[0.6rem] justify-end w-full">
                   <span className="text-red-600 tracking-wider">
-                    {question.authorFullname || "Anonymous"}
+                    {question.authorID ? question.authorID.fullname : "Anonymous"}
                   </span>
                   <span className="text-gray-400">
                     {getTimeDifference(question.timestamp)}

@@ -13,7 +13,7 @@ const QuesFeedView = () => {
           throw new Error("Failed to fetch questions");
         }
         const data = await response.json();
-        setQuestions(data.questions.reverse());
+        setQuestions(data.questions);
       } catch (error) {
         console.error("Error fetching questions:", error); 
       }
