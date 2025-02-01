@@ -19,28 +19,14 @@ const Header = ({ onToggleSidebar }) => {
   const getInitials = (name) => {
     const nameArray = name.split(" ");
     const initials = nameArray.map((word) => word[0]).join("");
-    return initials.toUpperCase();
+    return initials;
   };
 
   useEffect(() => {
-    const fetchUserFullName = async () => {
-      try {
-        const response = await fetch("/api/user/fullname", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Assuming token is stored in localStorage
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const data = await response.json();
-        setUserFullName(data.fullName);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserFullName();
+    fetch("/api/user/fullname")
+      .then((response) => response.json())
+      .then((data) => setUserFullName(data.fullname))
+      .catch((error) => console.error("Error fetching full name:", error));
   }, []);
 
   return (

@@ -6,9 +6,9 @@ const Welcome = () => {
   const [fullName, setFullName] = useState("");
 
   useEffect(() => {
-    fetch("/api/user/fullname")
+    fetch("/api/user/fullname", { credentials: 'include' })
       .then((response) => response.json())
-      .then((data) => setFullName(data.fullName))
+      .then((data) => setFullName(data.fullname))
       .catch((error) => console.error("Error fetching full name:", error));
   }, []);
 

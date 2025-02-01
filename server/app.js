@@ -113,6 +113,12 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
     }
 });
 
+app.get("/api/user/fullname", authenticateToken, async (req, res) => {
+    const user = await userModel.findById(req.user.userid);
+    if (!user) return res.sendStatus(404);
+    res.status(200).json({ fullname: user.fullname });
+})
+
 // Route to get questions asked by the current user
 app.get("/api/user/questions", authenticateToken, async (req, res) => {
     try {

@@ -28,21 +28,17 @@ const QuestionDetails = () => {
   const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
 
-  const toggleSidebar = () => {
-    setIsSidebarVisible((prev) => !prev);
-  };
+  const toggleSidebar = () => setIsSidebarVisible(prev => !prev);
 
   useEffect(() => {
     const fetchQuestionDetails = async () => {
       setLoading(true);
       try {
         const response = await fetch(`/api/questions/${title}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch question details");
-        }
+        if (!response.ok) throw new Error("Failed to fetch question details");
         const data = await response.json();
-        setQuestion(data.questions[0]); 
-        setFullname(data.user.fullname)
+        setQuestion(data.questions[0]);
+        setFullname(data.user.fullname);
       } catch (error) {
         setError(error.message);
         console.error("Error fetching questions: ", error);
@@ -53,10 +49,7 @@ const QuestionDetails = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch("/api/user/userid", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch("/api/user/userid", { method: "GET", credentials: "include" });
         if (response.ok) {
           const data = await response.json();
           setUserId(data.userId);
@@ -69,11 +62,8 @@ const QuestionDetails = () => {
     const fetchAnswers = async () => {
       try {
         const response = await fetch(`/api/questions/${title}/answers`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch answers");
-        }
+        if (!response.ok) throw new Error("Failed to fetch answers");
         const data = await response.json();
-        // Reverse the order of answers to show the latest first
         setAnswers(data.answers);
       } catch (error) {
         console.error("Error fetching answers: ", error);
@@ -82,23 +72,17 @@ const QuestionDetails = () => {
 
     fetchQuestionDetails();
     fetchUserDetails();
-    fetchAnswers(); // Fetch answers for the question
+    fetchAnswers();
   }, [title]);
 
   const handleVote = async (type, isAdding) => {
     try {
       const response = await fetch(`/api/questions/${title}/vote`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, isAdding }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update vote count");
-      }
-
+      if (!response.ok) throw new Error("Failed to update vote count");
       const updatedQuestion = await response.json();
       setQuestion(updatedQuestion.question);
     } catch (error) {
@@ -148,20 +132,13 @@ const QuestionDetails = () => {
     try {
       const response = await fetch(`/api/questions/${title}/answers`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: answerContent }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit answer");
-      }
-
+      if (!response.ok) throw new Error("Failed to submit answer");
       const newAnswer = await response.json();
-      // Add new answer to the beginning of the answers array
-      setAnswers((prevAnswers) => [newAnswer.answer, ...prevAnswers]); // Add new answer to the beginning
-      event.target.reset(); // Clear the textarea
+      setAnswers(prevAnswers => [newAnswer.answer, ...prevAnswers]);
+      event.target.reset();
     } catch (error) {
       console.error("Error submitting answer: ", error);
       alert("Error submitting answer: " + error.message);
@@ -171,17 +148,11 @@ const QuestionDetails = () => {
   const handleSaveQuestion = async () => {
     try {
       const response = await fetch(`/api/questions/${title}/save`, {
-        method: isSaved ? "DELETE" : "POST", // Use DELETE to unsave
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: isSaved ? "DELETE" : "POST",
+        headers: { "Content-Type": "application/json" },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to save question");
-      }
-
-      setIsSaved((prev) => !prev); // Toggle saved status
+      if (!response.ok) throw new Error("Failed to save question");
+      setIsSaved(prev => !prev);
     } catch (error) {
       console.error("Error saving question: ", error);
     }
@@ -243,7 +214,7 @@ const QuestionDetails = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-full flex gap-6 my-3 border-b border-b-gray-300">
+              <div className="w-full flex gap-6 my-3 border-b border-b-gray-300 pb-3">
                 <div className="flex flex-col gap-3">
                   <div
                     className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
@@ -274,10 +245,10 @@ const QuestionDetails = () => {
                   </div>
                   <div
                     className="rounded-full p-2 flex items-center justify-center border border-gray-400 cursor-pointer transition-transform hover:scale-110"
-                    onClick={handleSaveQuestion} // Add click handler
+                    onClick={handleSaveQuestion}
                   >
                     <FontAwesomeIcon
-                      icon={isSaved ? faBookmarkSolid : faBookmarkReg} // Toggle icon
+                      icon={isSaved ? faBookmarkSolid : faBookmarkReg}
                     />
                   </div>
                 </div>
