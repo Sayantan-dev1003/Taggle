@@ -122,7 +122,7 @@ const QuestionDetails = () => {
 
   const handleAnswerSubmit = async (event) => {
     event.preventDefault();
-    const answerContent = event.target.elements.description.value.trim();
+    const answerContent = event.target.description.value.trim();
 
     if (!answerContent) {
       alert("Answer cannot be empty");
@@ -137,7 +137,7 @@ const QuestionDetails = () => {
       });
       if (!response.ok) throw new Error("Failed to submit answer");
       const newAnswer = await response.json();
-      setAnswers(prevAnswers => [newAnswer.answer, ...prevAnswers]);
+      setAnswers(prevAnswers => [newAnswer.answer, ...prevAnswers]); // Update to use the correct property
       event.target.reset();
     } catch (error) {
       console.error("Error submitting answer: ", error);
@@ -264,14 +264,14 @@ const QuestionDetails = () => {
                 </div>
               </div>
               <div className="w-full mt-6">
-                <p className="font-medium">{answers.length}{" "}Answers</p>
+                <p className="font-medium">{answers.length} Answers</p>
                 {answers.length > 0 ? (
                   answers.map((answer, index) => (
                     <div key={index} className="border-b border-b-gray-300 p-4">
                       <p className="text-sm tracking-wide text-gray-600">{answer.content}</p>
                       <span className="text-[0.65rem] text-gray-400">
                         Answered by{" "}
-                        <span className="text-red-600 tracking-wider">{answer.authorFullname || "Anonymous"}</span> on{" "}
+                        <span className="text-red-600 tracking-wider">{answer.authorID.fullname || "Anonymous"}</span> on{" "}
                         <span>{getTimeDifference(answer.timestamp)}</span>
                       </span>
                     </div>

@@ -40,7 +40,7 @@ const questionSchema = mongoose.Schema({
 
 questionSchema.virtual('author', {
     ref: 'user',
-    localField: 'authorID',
+    localField: 'author',
     foreignField: '_id',
     justOne: true
 });

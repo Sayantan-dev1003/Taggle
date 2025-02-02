@@ -14,11 +14,7 @@ const answerSchema = mongoose.Schema({
         ref: "user",
         required: true
     },
-    authorFullname: {
-        type: String,
-        ref: "user",
-        required: true
-    },
+    authorFullname: String,
     upvotes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
@@ -43,7 +39,7 @@ answerSchema.virtual('author', {
 });
 
 answerSchema.pre('find', function() {
-    this.populate('author');
+    this.populate('authorID');
 });
 
 export default mongoose.model("answer", answerSchema);

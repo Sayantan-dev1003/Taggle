@@ -103,8 +103,12 @@ app.post("/api/questions", authenticateToken, async (req, res) => {
         });
 
         await newQuestion.save();
+        
         // Update the quesAsked attribute of userModel with the new question's id
         await userModel.findByIdAndUpdate(req.user.userid, { $addToSet: { quesAsked: newQuestion._id } }, { new: true });
+
+        // Update the questionID attribute of answerModel with the new question's id
+        await answerModel.updateMany({ questionID: newQuestion._id }, { $set: { questionID: newQuestion._id } });
 
         res.status(201).json({ message: "Question created successfully", question: newQuestion });
     } catch (error) {
@@ -253,7 +257,11 @@ app.get("/api/questions/:title/answers", async (req, res) => {
 // Route to post an answer for a specific question
 app.post("/api/questions/:title/answers", authenticateToken, async (req, res) => {
     const { title } = req.params;
-    const { content } = req.body; // Get content from request body
+    const { content } = req.body; 
+
+    if (!title || !content) {
+        return res.status(400).json({ message: "Invalid input"});
+    }
 
     try {
         const question = await questionModel.findOne({ title });
@@ -264,10 +272,10 @@ app.post("/api/questions/:title/answers", authenticateToken, async (req, res) =>
         const newAnswer = new answerModel({
             content,
             questionID: question._id,
-            author: req.user.userid // Associate answer with the logged-in user
+            authorID: req.user.userid
         });
 
-        await newAnswer.save(); // Save the new answer
+        await newAnswer.save();
 
         // Update the question with the new answer's ID
         question.answers.push(newAnswer._id);
