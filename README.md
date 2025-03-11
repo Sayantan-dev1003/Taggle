@@ -24,5 +24,3 @@ git clone https://github.com/Sayantan-dev1003/Taggle.git
 cd Taggle
 npm install
 npm start
-![Uploading image.png…]()
-![Uploading image.png…]()
