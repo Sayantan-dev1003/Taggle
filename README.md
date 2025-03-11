@@ -27,3 +27,6 @@ npm install
 cd server
 npm install
 nodemon app
+
+![Image](https://github.com/user-attachments/assets/c71acaf8-7b8f-4efe-abe9-25413cf6649a)
+![Image](https://github.com/user-attachments/assets/f08d091d-cc10-4b3f-8167-e85bd1eadc26)
