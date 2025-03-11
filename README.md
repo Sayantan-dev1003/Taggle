@@ -22,5 +22,8 @@ Taggle is a scalable Q&A discussion platform where users can ask, answer, and se
 ```bash
 git clone https://github.com/Sayantan-dev1003/Taggle.git
 cd Taggle
+cd frontend
 npm install
-npm start
+cd server
+npm install
+nodemon app
