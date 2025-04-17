@@ -1,13 +1,6 @@
 # Taggle - Q&A Discussion Platform
 
-## 🛠 Tech Stack
-
-## 🛠 Tech Stack
-
-### Frontend
 ![Frontend](https://img.shields.io/badge/Frontend-React.js%2C%20Tailwind%20CSS%2C%20Redux%20Toolkit%2C%20Axios-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-
-### Backend
 ![Backend](https://img.shields.io/badge/Backend-Node.js%2C%20Express.js%2C%20MongoDB%2C%20JWT%2C%20Bcrypt%2C%20Socket.io%2C%20ElasticSearch-339933?style=for-the-badge&logo=node.js&logoColor=white)
 
 ## 📌 Overview
