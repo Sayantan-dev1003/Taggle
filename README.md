@@ -2,18 +2,13 @@
 
 ## 🛠 Tech Stack
 
-![React](https://img.shields.io/badge/Frontend-React.js-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Frontend-Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Redux](https://img.shields.io/badge/Frontend-Redux%20Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white)
-![Axios](https://img.shields.io/badge/Frontend-Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+## 🛠 Tech Stack
 
-![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Backend-Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/Backend-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![JWT](https://img.shields.io/badge/Backend-JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
-![Bcrypt](https://img.shields.io/badge/Backend-Bcrypt-EFBC41?style=for-the-badge&logo=bcrypt&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Backend-Socket.io-010101?style=for-the-badge&logo=socket-dot-io&logoColor=white)
-![ElasticSearch](https://img.shields.io/badge/Backend-ElasticSearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)
+### Frontend
+![Frontend](https://img.shields.io/badge/Frontend-React.js%2C%20Tailwind%20CSS%2C%20Redux%20Toolkit%2C%20Axios-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+
+### Backend
+![Backend](https://img.shields.io/badge/Backend-Node.js%2C%20Express.js%2C%20MongoDB%2C%20JWT%2C%20Bcrypt%2C%20Socket.io%2C%20ElasticSearch-339933?style=for-the-badge&logo=node.js&logoColor=white)
 
 ## 📌 Overview
 Taggle is an interactive Question and Answer (Q&A) discussion platform designed to foster knowledge sharing and community engagement. It allows users to ask questions, share answers, and engage in meaningful discussions on a wide range of topics, similar to popular platforms like Stack Overflow and Reddit. Taggle focuses on creating a user-friendly environment where individuals can connect, learn, and collaborate, whether they are seeking technical answers, advice, or general discussions.
